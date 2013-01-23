@@ -8,7 +8,6 @@
 class Build {
 
 	private $db;
-	private $oldPrefix;
 	private $tables;
 	private $options;
 	
