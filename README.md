@@ -12,11 +12,11 @@ This tool contains files required to run unit tests in [WordPress](http://www.wo
 
 ## Installation
 
-All you need to do is place the files (build.php, build.xml, phpunit.xml and bootstrap.php) in your WordPress plugins directory. 
+All you need to do is place the files (``build.php``, ``build.xml``, ``phpunit.xml`` and ``bootstrap.php``) in your WordPress plugins directory. 
 
 For testing purposes, the dummy folder can be placed in the plugins directory.
 
-There is one **important change** that needs to be made to your wp-config.php file, you'll need to replace $table_prefix with the value listed in tool's wp-config file.
+There is one **important change** that needs to be made to your ``wp-config.php`` file, you'll need to replace ``$table_prefix`` with the value listed in tool's corresponding file.
 
 ## How to use
 
