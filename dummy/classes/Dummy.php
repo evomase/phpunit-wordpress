@@ -8,6 +8,11 @@ class Dummy {
 	
 	private static $_instance;
 	
+	/**
+	 * Returns an instance of the Dummy class
+	 * 
+	 * @return Dummy
+	 */
 	public static function getInstance()
 	{
 		if ( empty( self::$_instance ) )
