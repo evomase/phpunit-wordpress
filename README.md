@@ -24,4 +24,4 @@ To use the tool, all you need to do is run the build script using the command ``
 
 If you wish to just run your tests without building the WordPress test instance, you can just run the ``phpunit`` command.
 
-For more information visit [my blog post](http://www.davidogilo.co.uk/technical/tdd-in-wordpress-using-phpunit/)
+For more information visit [my blog post](http://goo.gl/a2mH1)
