@@ -10,7 +10,7 @@
  
 	<filter>
   		<whitelist>
-  			<directory suffix=".php">classes</directory>
+  			<directory suffix=".php">dummy/classes</directory>
   		</whitelist>
  	 </filter>
  

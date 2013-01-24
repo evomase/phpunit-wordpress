@@ -16,7 +16,8 @@ All you need to do is place the files (``build.php``, ``build.xml``, ``phpunit.x
 
 For testing purposes, the dummy folder can be placed in the plugins directory.
 
-There is one **important change** that needs to be made to your ``wp-config.php`` file, you'll need to replace ``$table_prefix`` with the value listed in tool's corresponding file.
+There is one **important change** that needs to be made to your ``wp-config.php`` file, you'll need to replace ``$table_prefix`` with the value listed in tool's corresponding file. Also,
+make sure you've added your database details to your config file.
 
 ## How to use
 
