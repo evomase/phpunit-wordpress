@@ -28,7 +28,14 @@ class Build {
 	private function init()
 	{
 		if ( $this->getTables() )
+		{
+			//Suppress all errors from showing - errors related to foreign keys constraints on tables.
+			$this->db->suppress_errors( true );
+			
 			$this->dropTables();
+			
+			$this->db->suppress_errors( false );
+		}
 		
 		$this->createTables();
 		
@@ -59,17 +66,30 @@ class Build {
 	 */
 	private function dropTables()
 	{
-		if ( !$tables = $this->getTables() ) return false;
+		static $loop;
+		$count = 0;
 
-		print '=== DELETING TABLES ===' . PHP_EOL . PHP_EOL;
+		if ( !$tables = $this->getTables() ) return false;
 		
-		foreach( $tables as $table )
+		if ( !isset( $loop ) )
+			print '=== DELETING TABLES ===' . PHP_EOL . PHP_EOL;
+		
+		foreach( $tables as $index => $table )
 		{
 			$sql = "DROP TABLE $table";
 			
-			$this->db->query( $sql );
+			if ( !$this->db->query( $sql ) ) continue;
+			
+			unset( $this->tables[$index] );
+			$count++;
 			
 			print $table . PHP_EOL;
+		}
+		
+		if ( count( $tables ) > $count )
+		{
+			$loop = true;
+			return $this->dropTables();
 		}
 		
 		print PHP_EOL . 'Complete.' . PHP_EOL . PHP_EOL;
