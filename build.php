@@ -90,7 +90,6 @@ class Build {
 					break;
 			}
 			
-			
 			if ( !$this->db->query( $sql ) ) continue;
 			
 			unset( $this->tables[$index] );
