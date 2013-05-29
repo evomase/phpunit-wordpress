@@ -37,7 +37,7 @@ class Build {
 			$this->db->suppress_errors( false );
 		}
 		
-		$this->createTables();
+		$this->install();
 		
 		if ( array_key_exists( 'plugins', $this->options ) && $this->options['plugins'] )
 			$this->activatePlugins( $this->options['plugins'] );
@@ -76,14 +76,28 @@ class Build {
 		
 		foreach( $tables as $index => $table )
 		{
-			$sql = "DROP TABLE $table";
+			$name = $table['Tables_in_' . DB_NAME];
+			$type = $table['Table_type'];
+			
+			switch( $type )
+			{
+				case 'VIEW':
+					$sql = "DROP VIEW $name";
+					break;
+					
+				default:
+					$sql = "DROP TABLE $name";
+					break;
+			}
+			
 			
 			if ( !$this->db->query( $sql ) ) continue;
 			
 			unset( $this->tables[$index] );
+			
 			$count++;
 			
-			print $table . PHP_EOL;
+			print $name . PHP_EOL;
 		}
 		
 		if ( count( $tables ) > $count )
@@ -106,19 +120,19 @@ class Build {
 	{
 		if ( empty( $this->tables ) )
 		{
-			$sql = "SHOW TABLES LIKE '" . PHPUNIT_DB_PREFIX . "%'";
-			$this->tables = $this->db->get_col( $sql );
+			$sql = "SHOW FULL TABLES IN " . DB_NAME . " WHERE Tables_in_" . DB_NAME . " LIKE '" . PHPUNIT_DB_PREFIX . "%'";
+			$this->tables = $this->db->get_results( $sql, ARRAY_A );
 		}
 		
 		return $this->tables;
 	}
 	
 	/**
-	 * Creates dummy PHPUNIT tables
+	 * Installs WordPress
 	 * 
 	 * @return boolean
 	 */
-	private function createTables()
+	private function install()
 	{
 		print '=== INSTALLING PHPUNIT WORDPRESS INSTANCE ===' . PHP_EOL . PHP_EOL;
 		
