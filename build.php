@@ -13,7 +13,7 @@ class Build {
 	
 	private static $_instance;
 
-	public function __construct()
+	private function __construct()
 	{
 		global $wpdb;
 		$this->db = $wpdb;
