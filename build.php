@@ -198,8 +198,6 @@ class Build {
 
 ( PHP_SAPI === 'cli' ) || die( 'Access Denied' );
 
-define( 'PHPUNIT_BUILD_SETUP', true );
-
 //Required so that we can install a dummy instance of wordpress
 define( 'WP_SITEURL', 'http://example.com' );
 
