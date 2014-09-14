@@ -42,7 +42,7 @@ class Build {
 		if ( array_key_exists( 'plugins', $this->options ) && $this->options['plugins'] )
 			$this->activatePlugins( $this->options['plugins'] );
 		
-		exit( 0 );
+		$this->success();
 	}
 	
 	/**
@@ -66,46 +66,41 @@ class Build {
 	 */
 	private function dropTables()
 	{
-		static $loop;
-		$count = 0;
-
 		if ( !$tables = $this->getTables() ) return false;
 		
-		if ( !isset( $loop ) )
-			print '=== DELETING TABLES ===' . PHP_EOL . PHP_EOL;
+		$this->printf( '=== DELETING TABLES ===' );
 		
-		foreach( $tables as $index => $table )
+		while( !empty( $tables ) )
 		{
+			$table = current( $tables );
+			
 			$name = $table['Tables_in_' . DB_NAME];
 			$type = $table['Table_type'];
-			
+				
 			switch( $type )
 			{
 				case 'VIEW':
 					$sql = "DROP VIEW $name";
 					break;
-					
+						
 				default:
 					$sql = "DROP TABLE $name";
 					break;
 			}
+				
+			if ( $this->db->query( $sql ) )
+			{
+				$index = key( $tables );
+				unset( $tables[$index] );
+			}
 			
-			if ( !$this->db->query( $sql ) ) continue;
+			if ( !next( $tables ) )
+				reset( $tables );
 			
-			unset( $this->tables[$index] );
-			
-			$count++;
-			
-			print $name . PHP_EOL;
+			$this->printf( $name, false );
 		}
 		
-		if ( count( $tables ) > $count )
-		{
-			$loop = true;
-			return $this->dropTables();
-		}
-		
-		print PHP_EOL . 'Complete.' . PHP_EOL . PHP_EOL;
+		$this->printf( PHP_EOL . 'Complete' );
 		
 		return true;
 	}
@@ -133,15 +128,14 @@ class Build {
 	 */
 	private function install()
 	{
-		print '=== INSTALLING PHPUNIT WORDPRESS INSTANCE ===' . PHP_EOL . PHP_EOL;
+		$this->printf( '=== INSTALLING PHPUNIT WORDPRESS INSTANCE ===' );
 		
 		if ( is_array( wp_install( 'PHPUNIT', 'phpunit', 'phpunit@example.com', true, null, 'phpunit' ) ) )
-			print 'Complete.' . PHP_EOL . PHP_EOL;
+			$this->printf( 'Complete' );
 		else
 		{
-			print 'Failed.' . PHP_EOL . PHP_EOL;
-			
-			exit( 1 );
+			$this->printf( 'Failed' );
+			$this->failure();
 		}
 		
 		return true;
@@ -157,30 +151,61 @@ class Build {
 	{
 		$plugins = explode( ',', $plugins );
 		
-		print "=== ACTIVATING PLUGINS ===" . PHP_EOL . PHP_EOL;
+		$this->printf( '=== ACTIVATING PLUGINS ===' );
 		
 		foreach( $plugins as &$plugin )
 		{
-			if ( file_exists( WP_PLUGIN_DIR . '/' . $plugin ) && !is_file( WP_PLUGIN_DIR . '/' . $plugin ) )
+			if ( !is_file( WP_PLUGIN_DIR . '/' . $plugin ) )
 				$plugin .= '/' . $plugin . '.php';
 			
-			print $plugin . PHP_EOL;
+			$this->printf( $plugin );
 		}
 		
 		unset( $plugin );
 		
 		if ( activate_plugins( $plugins ) !== true )
 		{
-			print PHP_EOL . 'Failed.' . PHP_EOL . PHP_EOL;
-			
-			exit( 1 );
+			$this->printf( 'Failed' );
+			$this->failure();
 		}
 
-		print PHP_EOL . 'Complete.' . PHP_EOL . PHP_EOL;
+		$this->printf( 'Complete' );
 		
 		return true;
 	}
-
+	
+	/**
+	 * Print message to the terminal
+	 * 
+	 * @param string $message
+	 * @param boolean $newline
+	 * @return void
+	 */
+	private function printf( $message, $newline = true )
+	{
+		print PHP_EOL . $message . ( ( $newline )? PHP_EOL : '' );
+	}
+	
+	/**
+	 * Exits the program on successful run
+	 * 
+	 * @return void
+	 */
+	private function success()
+	{
+		exit( 0 );
+	}
+	
+	/**
+	 * Exits the program on failure
+	 * 
+	 * @param int $code
+	 * @return void
+	 */
+	private function failure( $code = 1 )
+	{
+		exit( $code );
+	}
 	
 	/**
 	 * Returns the build instance
