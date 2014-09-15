@@ -12,5 +12,9 @@ global $wp_rewrite, $wpdb;
 require_once( __DIR__ . '/../../wp-load.php' );
 require_once( ABSPATH . 'wp-admin/includes/admin.php' );
 
+//change table prefix
 $wpdb->set_prefix( PHPUNIT_DB_PREFIX );
+
+//flush cache
+wp_cache_flush();
 ?>
