@@ -12,7 +12,12 @@ class Build {
 	private $options;
 	
 	private static $_instance;
-
+	
+	/**
+	 * Constructor
+	 * 
+	 * @return void
+	 */
 	private function __construct()
 	{
 		global $wpdb;
@@ -24,6 +29,8 @@ class Build {
 	
 	/**
 	 * Initiates the build script process.
+	 * 
+	 * @return void
 	 */
 	private function init()
 	{

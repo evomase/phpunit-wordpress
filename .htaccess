@@ -1,0 +1,4 @@
+<Files ~ "^(build|phpunit|bootstrap)\.(xml|php)$">
+	Order deny,allow
+	Deny from all
+</Files>

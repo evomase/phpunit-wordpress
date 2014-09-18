@@ -4,7 +4,7 @@ This tool contains files required to run unit tests in [WordPress](http://www.wo
 
 ## Requirements
 
-* WordPress 3.5
+* WordPress 3.5+
 * PHPUnit
 * PHP_CodeCoverage
 * XDebug
