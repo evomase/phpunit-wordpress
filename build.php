@@ -55,15 +55,13 @@ class Build {
 	/**
 	 * Checks the arguments passed to the script and runs functions depending on the arguments passed.
 	 * 
-	 * @return null
+	 * @return void
 	 */
 	private function setArguments()
 	{
 		$longOptions = array( 'plugins::' );
 		
 		$this->options = getopt( '', $longOptions );
-		
-		return null;
 	}
 
 	/**
